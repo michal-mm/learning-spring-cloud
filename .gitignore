@@ -8,3 +8,4 @@
 limits-service/.gitignore
 
 currency-exchange-service/.gitignore
+currency-conversion-service/.gitignore
