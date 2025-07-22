@@ -6,3 +6,5 @@
 
 .DS_Store
 limits-service/.gitignore
+
+currency-exchange-service/.gitignore
