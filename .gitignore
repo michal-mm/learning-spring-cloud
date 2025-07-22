@@ -3,7 +3,7 @@
 .classpath
 .project
 .settings/
-
+*.gitignore
 .DS_Store
 limits-service/.gitignore
 
