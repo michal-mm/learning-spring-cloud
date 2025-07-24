@@ -9,6 +9,19 @@ services:
     networks:
       - currency-network
 
+  api-gateway:
+    image: michalmm/mvn2-api-gateway:0.0.1-SNAPSHOT
+    mem_limit: 700m
+    ports:
+      - "8765:8765"
+    networks:
+      - currency-network
+    depends_on:
+      - naming-server
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
+      MANAGEMENT.ZIPKIN.TRACING.ENDPOINT: http://zipkin-server:9411/api/v2/spans
+
   currency-exchange:
     image: michalmm/mvn2-currency-exchange-service:0.0.1-SNAPSHOT
     mem_limit: 700m
@@ -20,6 +33,7 @@ services:
       - naming-server
     environment:
       EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
+      MANAGEMENT.ZIPKIN.TRACING.ENDPOINT: http://zipkin-server:9411/api/v2/spans
          
   currency-conversion:
     image: michalmm/mvn2-currency-conversion-service:0.0.1-SNAPSHOT
@@ -33,6 +47,15 @@ services:
       - currency-exchange
     environment:
       EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka
+      MANAGEMENT.ZIPKIN.TRACING.ENDPOINT: http://zipkin-server:9411/api/v2/spans
+      
+  zipkin-server:
+    image: openzipkin/zipkin:latest
+    mem_limit: 300m
+    ports:
+      - "9411:9411"
+    networks:
+      - currency-network
          
 networks:
   currency-network: 
