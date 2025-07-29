@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yaml
+    kompose.version: 1.36.0 (HEAD)
+  labels:
+    io.kompose.service: naming-server
+  name: naming-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: naming-server
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yaml
+        kompose.version: 1.36.0 (HEAD)
+      labels:
+        io.kompose.service: naming-server
+    spec:
+      containers:
+        - image: michalmm/mvn2-naming-server:0.0.1-SNAPSHOT
+          name: naming-server
+          ports:
+            - containerPort: 8761
+              protocol: TCP
+          resources:
+            limits:
+              memory: "734003200"
+      restartPolicy: Always

@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yaml
+    kompose.version: 1.36.0 (HEAD)
+  labels:
+    io.kompose.service: currency-exchange
+  name: currency-exchange
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      io.kompose.service: currency-exchange
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yaml
+        kompose.version: 1.36.0 (HEAD)
+      labels:
+        io.kompose.service: currency-exchange
+    spec:
+      containers:
+        - env:
+            - name: EUREKA.CLIENT.SERVICEURL.DEFAULTZONE
+              value: http://naming-server:8761/eureka
+            - name: MANAGEMENT.ZIPKIN.TRACING.ENDPOINT
+              value: http://zipkin-server:9411/api/v2/spans
+          image: michalmm/mvn2-currency-exchange-service:0.0.1-SNAPSHOT
+          name: currency-exchange
+          env:
+            - name: CURRENCY_EXCHANGE_URI
+              value: http://currency-exchange
+          ports:
+            - containerPort: 8000
+              protocol: TCP
+          resources:
+            limits:
+              memory: "734003200"
+      restartPolicy: Always
